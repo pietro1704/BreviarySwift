@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
 
-  @State private var hourText: String = ""
+  @State private var hourText: String?
+
   private var currentHour: Int {
     LiturgicHoursManager.shared.currentDateHour()
   }
@@ -22,17 +23,24 @@ struct ContentView: View {
       VStack {
         Text("são \(currentHour) horas.")
         Text(recommendedHourString)
-        Text(hourText)
-          .task {
-            do {
-               hourText = try await LiturgicHoursManager.shared.getRecommendedHourText()
-            } catch let error {
-              hourText = "Erro!\(error)"
-            }
+        Group {
+          if let hourText {
+            Text(hourText)
+          } else {
+            ProgressView()
           }
+        }
+        .task {
+          do {
+            hourText = try await LiturgicHoursManager.shared.getRecommendedHourText()
+          } catch let error {
+            hourText = "Erro!\(error)"
+          }
+        }
       }
     }
   }
+
 }
 
 struct ContentView_Previews: PreviewProvider {
