@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8DCE6FC22A61B193007A0FBD /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 8DCE6FC12A61B193007A0FBD /* SwiftSoup */; };
 		8DEB76112A5F0A0C00FDC86A /* BreviarioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEB76102A5F0A0C00FDC86A /* BreviarioApp.swift */; };
 		8DEB76132A5F0A0C00FDC86A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEB76122A5F0A0C00FDC86A /* ContentView.swift */; };
 		8DEB76152A5F0A0F00FDC86A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8DEB76142A5F0A0F00FDC86A /* Assets.xcassets */; };
@@ -34,7 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		8D8CCDB92A607DB2009E980E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8D8CCDB92A607DB2009E980E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DEB760D2A5F0A0C00FDC86A /* Breviario.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Breviario.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DEB76102A5F0A0C00FDC86A /* BreviarioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreviarioApp.swift; sourceTree = "<group>"; };
 		8DEB76122A5F0A0C00FDC86A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -53,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8DCE6FC22A61B193007A0FBD /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,6 +75,48 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8DCE6FC32A61B222007A0FBD /* App */ = {
+			isa = PBXGroup;
+			children = (
+				8D8CCDB92A607DB2009E980E /* Info.plist */,
+				8DEB76102A5F0A0C00FDC86A /* BreviarioApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		8DCE6FC42A61B22E007A0FBD /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8DEB76142A5F0A0F00FDC86A /* Assets.xcassets */,
+				8DEB76162A5F0A0F00FDC86A /* Breviario.entitlements */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		8DCE6FC52A61B246007A0FBD /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				8DCE6FC62A61B31C007A0FBD /* LiturgicHour */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		8DCE6FC62A61B31C007A0FBD /* LiturgicHour */ = {
+			isa = PBXGroup;
+			children = (
+				8DCE6FC72A61B332007A0FBD /* View */,
+			);
+			path = LiturgicHour;
+			sourceTree = "<group>";
+		};
+		8DCE6FC72A61B332007A0FBD /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8DEB76122A5F0A0C00FDC86A /* ContentView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		8DEB76042A5F0A0C00FDC86A = {
 			isa = PBXGroup;
 			children = (
@@ -98,11 +142,9 @@
 		8DEB760F2A5F0A0C00FDC86A /* Breviario */ = {
 			isa = PBXGroup;
 			children = (
-				8D8CCDB92A607DB2009E980E /* Info.plist */,
-				8DEB76102A5F0A0C00FDC86A /* BreviarioApp.swift */,
-				8DEB76122A5F0A0C00FDC86A /* ContentView.swift */,
-				8DEB76142A5F0A0F00FDC86A /* Assets.xcassets */,
-				8DEB76162A5F0A0F00FDC86A /* Breviario.entitlements */,
+				8DCE6FC32A61B222007A0FBD /* App */,
+				8DCE6FC52A61B246007A0FBD /* Source */,
+				8DCE6FC42A61B22E007A0FBD /* Resources */,
 				8DEB76172A5F0A0F00FDC86A /* Preview Content */,
 			);
 			path = Breviario;
@@ -149,6 +191,9 @@
 			dependencies = (
 			);
 			name = Breviario;
+			packageProductDependencies = (
+				8DCE6FC12A61B193007A0FBD /* SwiftSoup */,
+			);
 			productName = Breviario;
 			productReference = 8DEB760D2A5F0A0C00FDC86A /* Breviario.app */;
 			productType = "com.apple.product-type.application";
@@ -221,6 +266,9 @@
 				Base,
 			);
 			mainGroup = 8DEB76042A5F0A0C00FDC86A;
+			packageReferences = (
+				8DCE6FC02A61B193007A0FBD /* XCRemoteSwiftPackageReference "SwiftSoup" */,
+			);
 			productRefGroup = 8DEB760E2A5F0A0C00FDC86A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -622,6 +670,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8DCE6FC02A61B193007A0FBD /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8DCE6FC12A61B193007A0FBD /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8DCE6FC02A61B193007A0FBD /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8DEB76052A5F0A0C00FDC86A /* Project object */;
 }
