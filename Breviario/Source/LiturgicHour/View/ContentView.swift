@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
 
-  @State private var hourText: String?
+  @State private var hourText: AttributedString?
 
   private var currentHour: Int {
     LiturgicHoursManager.shared.currentDateHour()
@@ -34,12 +34,15 @@ struct ContentView: View {
           do {
             hourText = try await LiturgicHoursManager.shared.getRecommendedHourText()
           } catch let error {
-            hourText = "Erro!\(error)"
+            hourText = .init(stringLiteral: "Erro!\(error)")
           }
         }
       }
+      .padding(.all)
     }
-    .statusBar(hidden: true)
+    #if os(iOS)
+      .statusBar(hidden: true)
+    #endif
   }
 
 }
@@ -67,28 +70,28 @@ final class NetworkManager {
   private init() {}
 
   private func url(for hour: LiturgicHoursManager.LiturgicHour) throws -> URL {
+    let baseUrlString = "http://www.ibreviary.com/m2/breviario.php?b=1"
     let string: String
     switch hour {
-    case .OficioLeituras:
-      string = "http://www.ibreviary.com/m2/breviario.php?s=ufficio_delle_letture"
-    case .Laudes:
-      string = "http://www.ibreviary.com/m2/breviario.php?s=lodi"
-    case .HoraIntermedia:
-      string = "http://www.ibreviary.com/m2/breviario.php?s=ora_media"
-    case .Vesperas:
-      string = "http://www.ibreviary.com/m2/breviario.php?s=vespri"
-    case .Completas:
-      string = "http://www.ibreviary.com/m2/breviario.php?s=compieta"
+    case .oficioLeituras:
+      string = "\(baseUrlString)&s=ufficio_delle_letture"
+    case .laudes:
+      string = "\(baseUrlString)&s=lodi"
+    case .horaIntermedia:
+      string = "\(baseUrlString)&s=ora_media"
+    case .vesperas:
+      string = "\(baseUrlString)&s=vespri"
+    case .completas:
+      string = "\(baseUrlString)&s=compieta"
     }
-
-    if let url = URL(string: string) {
-      return url
-    } else {
-      throw URLErrors.invalidURL
+    guard let url = URL(string: string) else {
+      throw HTMLParser.ParseErrors.conversionFailure
     }
+    return url
   }
 
-  func getText(hour: LiturgicHoursManager.LiturgicHour) async throws -> String {
+  @MainActor
+  func getText(hour: LiturgicHoursManager.LiturgicHour) async throws -> AttributedString {
     let (data, response) = try await URLSession.shared.data(from: url(for: hour))
     guard let response = response as? HTTPURLResponse,
           response.statusCode == 200 else {
@@ -112,19 +115,20 @@ final class NetworkManager {
 final class LiturgicHoursManager {
 
   enum LiturgicHour: String {
-    case OficioLeituras = "Ofício das Leituras"
-    case Laudes = "Laudes"
-    case HoraIntermedia = "Hora Intermediária"
-    case Vesperas = "Vésperas"
-    case Completas = "Completas"
+    case oficioLeituras = "Ofício das Leituras"
+    case laudes = "Laudes"
+    case horaIntermedia = "Hora Intermediária"
+    case vesperas = "Vésperas"
+    case completas = "Completas"
   }
 
   static let shared = LiturgicHoursManager()
   private let dateFormatter = DateFormatter()
 
-  private init() { }
+  private init() {}
 
-  func getRecommendedHourText() async throws -> String {
+  @MainActor
+  func getRecommendedHourText() async throws -> AttributedString {
     let recommendedLiturgicHour = recommendedLiturgicHour(for: currentDateHour())!
     do {
       return try await NetworkManager.shared.getText(hour: recommendedLiturgicHour)
@@ -141,19 +145,19 @@ final class LiturgicHoursManager {
 
   func recommendedLiturgicHour(for currentHour: Int) -> LiturgicHour? {
     if 0 <= currentHour, currentHour < 6 {
-      return .OficioLeituras
+      return .oficioLeituras
     }
     if 6 <= currentHour, currentHour < 9 {
-      return .Laudes
+      return .laudes
     }
     if 9 <= currentHour, currentHour < 18 {
-      return .HoraIntermedia
+      return .horaIntermedia
     }
     if 18 <= currentHour, currentHour < 21 {
-      return .Vesperas
+      return .vesperas
     }
     if 21 <= currentHour, currentHour <= 23 {
-      return .Completas
+      return .completas
     }
     return nil
   }
@@ -170,17 +174,20 @@ final class HTMLParser {
     case conversionFailure
   }
 
-  func parse(_ htmlString: String) throws -> String {
+  @MainActor
+  func parse(_ htmlString: String) throws -> AttributedString {
     guard let data = htmlString.data(using: .utf8) else {
       throw ParseErrors.invalidHTMLData
     }
-    let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
-      .documentType: NSAttributedString.DocumentType.html,
-      .characterEncoding: String.Encoding.utf8.rawValue
-    ]
-    guard let attributedString = try? NSAttributedString(data: data, options: options, documentAttributes: nil) else {
+    guard let attributedString = try? NSAttributedString(
+      data: data,
+      options: [
+        .documentType: NSAttributedString.DocumentType.html
+      ],
+      documentAttributes: nil) else {
       throw ParseErrors.conversionFailure
     }
-    return attributedString.string
+    return .init(attributedString)
   }
+
 }
