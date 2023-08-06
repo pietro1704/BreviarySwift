@@ -11,7 +11,7 @@ import SwiftUI
 struct BreviarioApp: App {
   var body: some Scene {
     WindowGroup {
-      ContentView()
+      LiturgicHourView()
     }
   }
 }
